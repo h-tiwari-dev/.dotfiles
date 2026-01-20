@@ -1,6 +1,18 @@
-# Dotfiles
+<div align="center">
 
-A collection of configuration files and scripts to set up my development environment on macOS (and Linux).
+# ⚡ Dotfiles
+
+### My personal development environment configuration
+
+[![MacOS](https://img.shields.io/badge/macOS-000000?style=for-the-badge&logo=apple&logoColor=white)](https://www.apple.com/macos/)
+[![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)](https://www.linux.org/)
+[![Shell](https://img.shields.io/badge/Shell-FFFFFF?style=for-the-badge&logo=gnu-bash&logoColor=black)](https://www.gnu.org/software/bash/)
+[![Neovim](https://img.shields.io/badge/Neovim-57A143?style=for-the-badge&logo=neovim&logoColor=white)](https://neovim.io/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+
+A meticulously crafted collection of configuration files and scripts to set up a **beautiful**, **productive**, and **consistent** development environment on macOS and Linux.
+
+</div>
 
 ## Overview
 
