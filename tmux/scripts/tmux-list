@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# List all tmux sessions with clean preview
+
+sessions=$(tmux ls -F "#{session_name}" 2>/dev/null)
+
+if [[ -z "$sessions" ]]; then
+    echo "No tmux sessions running"
+    exit 0
+fi
+
+echo "$sessions" | fzf \
+    --height 80% \
+    --reverse \
+    --header "Sessions (Enter to attach, Esc to close)" \
+    --preview '
+        session={}
+
+        # Session info
+        info=$(tmux display-message -t "$session" -p "Created: #{session_created_string}" 2>/dev/null)
+        attached=$(tmux display-message -t "$session" -p "#{?session_attached,attached,detached}" 2>/dev/null)
+
+        printf "\033[1;34m%s\033[0m  (%s)\n" "$session" "$attached"
+        echo "─────────────────────────────────────"
+
+        # List windows with their panes
+        tmux list-windows -t "$session" -F "#{window_index}:#{window_name}" 2>/dev/null | while read -r win; do
+            win_idx=$(echo "$win" | cut -d: -f1)
+            win_name=$(echo "$win" | cut -d: -f2-)
+
+            # Get active marker
+            is_active=$(tmux display-message -t "$session:$win_idx" -p "#{?window_active,*, }" 2>/dev/null)
+
+            printf "\n\033[1;33m%s %s:%s\033[0m\n" "$is_active" "$win_idx" "$win_name"
+
+            # List panes in this window
+            tmux list-panes -t "$session:$win_idx" -F "#{pane_index}|#{pane_current_command}|#{pane_current_path}" 2>/dev/null | while read -r pane; do
+                pane_idx=$(echo "$pane" | cut -d"|" -f1)
+                pane_cmd=$(echo "$pane" | cut -d"|" -f2)
+                pane_path=$(echo "$pane" | cut -d"|" -f3 | sed "s|$HOME|~|")
+
+                printf "    \033[0;36m[%s]\033[0m %s \033[0;90m%s\033[0m\n" "$pane_idx" "$pane_cmd" "$pane_path"
+            done
+        done
+    ' \
+    --preview-window "right:50%:wrap" \
+    --bind 'enter:execute(
+        session={}
+        if [[ -n "$TMUX" ]]; then
+            tmux switch-client -t "$session"
+        else
+            tmux attach -t "$session"
+        fi
+    )+abort'

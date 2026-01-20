@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# Fuzzy pick and attach/switch to a tmux session with preview
+
+sessions=$(tmux ls -F "#{session_name}" 2>/dev/null)
+
+if [[ -z "$sessions" ]]; then
+    echo "No tmux sessions running"
+    exit 0
+fi
+
+selected=$(echo "$sessions" | fzf \
+    --height 80% \
+    --reverse \
+    --header "Select session to attach" \
+    --preview 'tmux capture-pane -t {} -p -e 2>/dev/null || echo "No preview available"' \
+    --preview-window "down:50%:wrap")
+
+if [[ -z "$selected" ]]; then
+    exit 0
+fi
+
+if [[ -n "$TMUX" ]]; then
+    tmux switch-client -t "$selected"
+else
+    tmux attach -t "$selected"
+fi
