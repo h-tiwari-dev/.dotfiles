@@ -41,7 +41,7 @@ The `install.sh` script is designed to automate the entire process on macOS usin
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/h-tiwari-dev/dotfiles.git ~/.dotfiles
+   git clone https://github.com/h-tiwari-dev/.dotfiles.git ~/.dotfiles
    cd ~/.dotfiles
    ```
 
